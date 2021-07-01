@@ -75,8 +75,11 @@ impl IsTest for QC {
 
 impl From<quickcheck::TestResult> for TestResult {
     fn from(qc_result: quickcheck::TestResult) -> Self {
-        if qc_result.is_error() {
-            TestResult::failed(format!("{:?}", qc_result))
+        if qc_result.is_failure() {
+            TestResult::failed(format!(
+                "Found case where the property is not valid: {:?}",
+                qc_result
+            ))
         } else {
             TestResult::passed("")
         }

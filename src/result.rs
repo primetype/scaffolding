@@ -109,6 +109,13 @@ impl TestResult {
     }
 }
 
+impl From<()> for TestResult {
+    #[inline]
+    fn from(_: ()) -> Self {
+        Self::passed("")
+    }
+}
+
 impl From<bool> for TestResult {
     #[inline]
     fn from(condition: bool) -> Self {

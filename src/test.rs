@@ -3,7 +3,7 @@ use crate::{
     Outcome, Settings, TestResult,
 };
 use std::{
-    panic::{catch_unwind, AssertUnwindSafe},
+    panic::{catch_unwind, set_hook, take_hook, AssertUnwindSafe, PanicInfo},
     sync::{Arc, Condvar, Mutex},
     thread,
     time::{Duration, Instant},
@@ -33,7 +33,9 @@ where
         let thread = thread
             .spawn(move || {
                 let instant = Instant::now();
+                set_hook(Box::new(dont_print_panic));
                 let result = catch_unwind(AssertUnwindSafe(|| self().into()));
+                let _ = take_hook();
                 *update_duration.lock().unwrap() = instant.elapsed();
                 let (lock, cvar) = &*notify;
                 let mut finished = lock.lock().unwrap();
@@ -75,3 +77,5 @@ where
         TestResult { duration, ..result }
     }
 }
+
+fn dont_print_panic(_: &PanicInfo) {}

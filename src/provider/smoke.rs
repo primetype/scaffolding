@@ -10,6 +10,15 @@ pub struct Smoke {
     test: Box<dyn Testable + Send + 'static>,
 }
 
+#[derive(Debug, Clone, Copy)]
+pub struct MaxRetry(pub u64);
+impl Setting for MaxRetry {}
+impl Default for MaxRetry {
+    fn default() -> Self {
+        Self(1_000)
+    }
+}
+
 impl Smoke {
     pub fn new<T>(smoke: T) -> Self
     where
@@ -26,6 +35,8 @@ impl IsTest for Smoke {
     fn run(self: Box<Self>, settings: Settings) -> TestResult {
         let mut context = Context::new();
 
+        let nb_tests = settings.get_or_default::<MaxRetry>();
+        context.set_nb_tests(nb_tests.0);
         if let Some(seed) = settings.get::<Seed>() {
             context.set_seed(*seed);
         }
