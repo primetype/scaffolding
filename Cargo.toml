@@ -1,0 +1,33 @@
+[package]
+name = "scaffolding"
+version = "0.1.0"
+authors = ["Nicolas Di Prima <nicolas@primetype.co.uk>"]
+edition = "2018"
+description = "Driving tests through more elegant and configurable API"
+homepage = "https://github.com/primetype/scaffolding"
+repository = "https://github.com/primetype/scaffolding/"
+license = "MIT OR Apache-2.0"
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[features]
+"with-quickcheck" = ["quickcheck"]
+"with-smoke" = [ "smoke" ]
+
+[dependencies]
+scaffolding-macro = { version = "0.1", path = "scaffolding-macro" }
+
+console = { version = "0.14" }
+beard = { version = "0.2.1" }
+
+quickcheck = { version = "1", optional = true }
+smoke = { version = "0.2.1", path = "../../vincenthz/smoke/smoke", optional = true }
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
+
+[workspace]
+members = [
+    "scaffolding-macro"
+]
